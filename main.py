@@ -118,8 +118,8 @@ for i_episode in range(args.num_episodes):
     writer.add_scalar('reward/train', episode_reward, i_episode)
 
     # Update param_noise based on distance metric
-    if args.param_noise:
-        episode_transitions = memory.memory[memory.position-t:memory.position]
+    if args.param_noise and len(memory) >= args.batch_size:
+        episode_transitions = memory.memory[memory.position-args.batch_size:memory.position]
         states = torch.cat([transition[0] for transition in episode_transitions], 0)
         unperturbed_actions = agent.select_action(states, None, None)
         perturbed_actions = torch.cat([transition[1] for transition in episode_transitions], 0)
